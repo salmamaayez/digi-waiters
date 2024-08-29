@@ -10,12 +10,21 @@ export default function CurrentOrdersPage() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    // Charger les commandes depuis sessionStorage
-    const savedOrders = JSON.parse(sessionStorage.getItem('orders')) || [];
-    setOrders(savedOrders);
+    try {
+      const savedOrders = JSON.parse(localStorage.getItem('orders')) || [];
+      if (Array.isArray(savedOrders)) {
+        setOrders(savedOrders);
+      } else {
+        console.error("Invalid orders data");
+        setOrders([]);
+      }
+    } catch (error) {
+      console.error("Error loading orders:", error);
+      setOrders([]);
+    }
   }, []);
 const handleClearOrders = () => {
-    sessionStorage.removeItem('orders');
+    localStorage.removeItem('orders');
     setOrders([]);
   };
   return (
